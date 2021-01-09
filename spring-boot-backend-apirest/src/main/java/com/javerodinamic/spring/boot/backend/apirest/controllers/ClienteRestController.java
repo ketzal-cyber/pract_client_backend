@@ -8,10 +8,13 @@
 package com.javerodinamic.spring.boot.backend.apirest.controllers;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,9 +42,27 @@ public class ClienteRestController {
 		return clienteService.findAll();
 	}
 	
+	
+	/*
+	 * implementacion captura de errores
+	 * usar clase ResponsEntity propia de spring en lugar de retornar Cliente
+	 * 	como retornara un string en caso de error ResponsEntity sera de tipo generic (?)
+	 * usamos un Map para tener el menaje de error 
+	 */
 	@GetMapping("/clientes/{id}")
-	public Cliente show(@PathVariable Long id) {
-		return clienteService.findById(id);
+	public ResponseEntity<?> show(@PathVariable Long id) {
+		// return clienteService.findById(id); para cuando retorna un cliente
+		
+		Cliente cliente = clienteService.findById(id);
+		Map<String , Object> response = new HashMap<>();
+		
+		if(cliente == null) {
+			response.put("Mensaje", "El cliente ID: ".concat(id.toString().concat(" no existe en la ase de datos")));
+			return new ResponseEntity<Map<String , Object>>(response, HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
+		
+		
 	}
 	
 	// como vienen en formato JSon le pasamos el Requestody para ue los convierta y mapie en las propiedades
