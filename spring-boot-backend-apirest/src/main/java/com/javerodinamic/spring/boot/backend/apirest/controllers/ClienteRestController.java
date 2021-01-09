@@ -2,6 +2,8 @@
  * Anotación RestController
  * Anotación CrossOrigin que es el cors para permitir el acceso a dominios
  * Metodo index para listar los clientes
+ * implemantar metodos para el crud completo
+ * implementacion el manejo de errores
  */
 package com.javerodinamic.spring.boot.backend.apirest.controllers;
 
