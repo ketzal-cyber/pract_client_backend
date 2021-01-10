@@ -64,7 +64,7 @@ public class ClienteRestController {
 		catch(DataAccessException e) {
 			response.put("Mensaje", "Error en la consulta de base de datos");
 			response.put("Mensaje", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
-			return new ResponseEntity<Map<String , Object>>(response, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Map<String , Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		
@@ -81,10 +81,24 @@ public class ClienteRestController {
 	// como vienen en formato JSon le pasamos el Requestody para ue los convierta y mapie en las propiedades
 	// le podemos pasar una fecha en el metodo
 	@PostMapping("/clientes")
-	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente create(@RequestBody Cliente cliente) {
-		//cliente.setCreateAt(new Date());
-		return clienteService.save(cliente);
+	//@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> create(@RequestBody Cliente cliente) {
+		//cliente.setCreateAt(new Date());		
+		//return clienteService.save(cliente);
+		
+		Cliente clienteNew = null;
+		Map<String, Object> response = new HashMap<>();
+		try {
+			clienteNew = clienteService.save(cliente);
+		} catch(DataAccessException e) {
+			response.put("Mensaje", "Error en la insert en la base de datos");
+			response.put("Mensaje", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String , Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//objeto Mao para mandar un mensaje de confirmacion
+		response.put("mensaje", "El cliente ha sido creado con exito");
+		response.put("cliente", clienteNew);
+		return new ResponseEntity<Map<String , Object>>( response, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/clientes/{id}")
