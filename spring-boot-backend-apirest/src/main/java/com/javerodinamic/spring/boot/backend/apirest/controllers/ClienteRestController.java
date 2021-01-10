@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -48,13 +49,25 @@ public class ClienteRestController {
 	 * usar clase ResponsEntity propia de spring en lugar de retornar Cliente
 	 * 	como retornara un string en caso de error ResponsEntity sera de tipo generic (?)
 	 * usamos un Map para tener el menaje de error 
+	 * prueba de rama capturar errores
+	 * bloque TRY CATCH para capturar errores al consultar DB
 	 */
 	@GetMapping("/clientes/{id}")
 	public ResponseEntity<?> show(@PathVariable Long id) {
 		// return clienteService.findById(id); para cuando retorna un cliente
 		
-		Cliente cliente = clienteService.findById(id);
+		Cliente cliente = null;
 		Map<String , Object> response = new HashMap<>();
+		try {
+			cliente = clienteService.findById(id);
+		} 
+		catch(DataAccessException e) {
+			response.put("Mensaje", "Error en la consulta de base de datos");
+			response.put("Mensaje", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String , Object>>(response, HttpStatus.NOT_FOUND);
+		}
+		
+		
 		
 		if(cliente == null) {
 			response.put("Mensaje", "El cliente ID: ".concat(id.toString().concat(" no existe en la ase de datos")));
