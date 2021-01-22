@@ -78,15 +78,13 @@ public class ClienteRestController {
 
 	}
 
-	
 	/*
-	 como vienen en formato JSon le pasamos el Requestody para ue los convierta y
-	 mapie en las propiedades
-	 le podemos pasar una fecha en el metodo
-	 anotacion para la validación  @Valid sin esta las anotaciones de Entity no funcionan
-	 inyectar objeto que contiene todos los mensajes de error BindingResult
-	*/
-	
+	 * como vienen en formato JSon le pasamos el Requestody para ue los convierta y
+	 * mapie en las propiedades le podemos pasar una fecha en el metodo anotacion
+	 * para la validación @Valid sin esta las anotaciones de Entity no funcionan
+	 * inyectar objeto que contiene todos los mensajes de error BindingResult
+	 */
+
 	@PostMapping("/clientes")
 	// @ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody Cliente cliente, BindingResult result) {
@@ -95,24 +93,23 @@ public class ClienteRestController {
 
 		Cliente clienteNew = null;
 		Map<String, Object> response = new HashMap<>();
-		
-		if(result.hasErrors()) {
-			
-			/*  metodo para versiones antes de JDK8
-			List<String> errors = new ArrayList<String>();
-			for(FieldError err: result.getFieldErrors()) {
-				errors.add("El campo "+ err.getField() + " ' "+ err.getDefaultMessage());
-			}*/
-			
-			List<String> errors = result.getFieldErrors()
-					.stream()
-					.map(err -> "El campo "+ err.getField() + " ' "+ err.getDefaultMessage())
+
+		if (result.hasErrors()) {
+
+			/*
+			 * metodo para versiones antes de JDK8 List<String> errors = new
+			 * ArrayList<String>(); for(FieldError err: result.getFieldErrors()) {
+			 * errors.add("El campo "+ err.getField() + " ' "+ err.getDefaultMessage()); }
+			 */
+
+			List<String> errors = result.getFieldErrors().stream()
+					.map(err -> "El campo " + err.getField() + " ' " + err.getDefaultMessage())
 					.collect(Collectors.toList());
-			
+
 			response.put("errors", errors);
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
-		
+
 		try {
 			clienteNew = clienteService.save(cliente);
 		} catch (DataAccessException e) {
@@ -128,13 +125,29 @@ public class ClienteRestController {
 
 	@PutMapping("/clientes/{id}")
 	// @ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> update(@RequestBody Cliente cliente, @PathVariable Long id) {
+	public ResponseEntity<?> update(@Valid @RequestBody Cliente cliente, BindingResult result, @PathVariable Long id) {
 		// Cliente clienteActual = clienteService.findById(id); si retorna un Cliente
 		// unicamente
 
 		Cliente clienteActual = clienteService.findById(id);
 		Cliente clienteUpdated = null;
 		Map<String, Object> response = new HashMap<>();
+
+		if (result.hasErrors()) {
+
+			/*
+			 * metodo para versiones antes de JDK8 List<String> errors = new
+			 * ArrayList<String>(); for(FieldError err: result.getFieldErrors()) {
+			 * errors.add("El campo "+ err.getField() + " ' "+ err.getDefaultMessage()); }
+			 */
+
+			List<String> errors = result.getFieldErrors().stream()
+					.map(err -> "El campo " + err.getField() + " ' " + err.getDefaultMessage())
+					.collect(Collectors.toList());
+
+			response.put("errors", errors);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+		}
 
 		if (clienteActual == null) {
 			response.put("Mensaje", "Error no se puede editar, el cliente ID: "
