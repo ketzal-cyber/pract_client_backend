@@ -31,13 +31,20 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	//anotaciones
+	//anotacion para validar 
+	@NotEmpty
+	@Size(min = 4, max = 12)
+	@Column(nullable = false)
 	private String nombre;
 	
 	//anotaciones
+	@NotEmpty
 	private String apellido;
 	
-	//anotaciones
+	//anotacion para validar
+	@NotEmpty
+	@Email
+	@Column(nullable = false, unique=true)
 	private String email;
 	
 	@Column(name="create_at")
