@@ -32,16 +32,21 @@ public class Cliente implements Serializable {
 	private Long id;
 	
 	//anotacion para validar 
+	// @NotEmpty(message = "para mensajes en español por si el location est en english")
+	//@Size(min = 4, max = 12, menssage = " mensaje ")
 	@NotEmpty
 	@Size(min = 4, max = 12)
 	@Column(nullable = false)
 	private String nombre;
 	
 	//anotaciones
+	// @NotEmpty(message = "para mensajes en español por si el location est en english
 	@NotEmpty
 	private String apellido;
 	
 	//anotacion para validar
+	// @NotEmpty(message = "para mensajes en español por si el location est en english
+	//@Email(message =  "mensaje")
 	@NotEmpty
 	@Email
 	@Column(nullable = false, unique=true)
