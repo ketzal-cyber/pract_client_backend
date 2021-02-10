@@ -14,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -49,18 +50,22 @@ public class Cliente implements Serializable {
 	//@Email(message =  "mensaje")
 	@NotEmpty
 	@Email
-	@Column(nullable = false, unique=true)
+	@Column(nullable = false, unique=false)
 	private String email;
 	
+	@NotNull(message = "No puede estar vacio")
 	@Column(name="create_at")
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
 	
-	// metodo para asignarle una fecha antes de persistir los datos de un save
+	/* metodo para asignarle una fecha antes de persistir los datos de un save
+	 * meto para guardar la fecha ante de ser guardao en la base
+	 * comantado por la implementacion del campo atravez de un datapiker
 	@PrePersist
 	public void prePersist() {
 		createAt = new Date();
 	}
+	*/
 	
 	public Long getId() {
 		return id;
