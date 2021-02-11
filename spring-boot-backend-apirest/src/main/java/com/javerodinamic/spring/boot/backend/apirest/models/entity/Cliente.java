@@ -58,6 +58,8 @@ public class Cliente implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
 	
+	private String foto;
+	
 	/* metodo para asignarle una fecha antes de persistir los datos de un save
 	 * meto para guardar la fecha ante de ser guardao en la base
 	 * comantado por la implementacion del campo atravez de un datapiker
@@ -101,6 +103,16 @@ public class Cliente implements Serializable {
 
 	public Date getCreateAt() {
 		return createAt;
+	}
+	
+	
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
 	}
 
 	public void setCreateAt(Date createAt) {
